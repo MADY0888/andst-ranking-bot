@@ -20,7 +20,10 @@ from slack_sdk import WebClient
 
 SITE_NAME = "andST"
 BASE_URL = "https://www.dot-st.com"
-RANKING_URL = os.environ.get("ANDST_RANKING_URL", "https://www.dot-st.com/disp/ranking/").strip()
+RANKING_URL = os.environ.get(
+    "ANDST_RANKING_URL",
+    "https://www.dot-st.com/disp/ranking/?dispNo=001001003&periodTp=3&ageRange="
+).strip()
 
 DATA_FILE = "previous.json"
 CSV_FILE = "data.csv"
