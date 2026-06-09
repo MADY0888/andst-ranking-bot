@@ -1,0 +1,66 @@
+name: GRL Ranking Bot
+
+on:
+  schedule:
+    - cron: "10 0 * * *"   # daily JST 09:10
+    - cron: "20 0 * * 1"   # weekly Monday JST 09:20
+    - cron: "30 0 1 * *"  # monthly 1st JST 09:30
+  workflow_dispatch:
+    inputs:
+      report_type:
+        description: "daily / weekly / monthly"
+        required: false
+        default: "daily"
+
+permissions:
+  contents: write
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Japanese fonts
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y fonts-noto-cjk
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Determine report type
+        id: report
+        run: |
+          if [ "${{ github.event.inputs.report_type }}" != "" ]; then
+            echo "type=${{ github.event.inputs.report_type }}" >> $GITHUB_OUTPUT
+          elif [ "${{ github.event.schedule }}" = "20 0 * * 1" ]; then
+            echo "type=weekly" >> $GITHUB_OUTPUT
+          elif [ "${{ github.event.schedule }}" = "30 0 1 * *" ]; then
+            echo "type=monthly" >> $GITHUB_OUTPUT
+          else
+            echo "type=daily" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Run script
+        run: python main.py --report-type ${{ steps.report.outputs.type }}
+        env:
+          SLACK_TARGETS_JSON: ${{ secrets.SLACK_TARGETS_JSON }}
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+          SLACK_CHANNEL_ID: ${{ secrets.SLACK_CHANNEL_ID }}
+
+      - name: Save latest data
+        if: always()
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add previous.json data.csv
+          git commit -m "Update GRL data" || echo "No changes"
+          git push
