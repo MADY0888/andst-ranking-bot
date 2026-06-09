@@ -1,0 +1,7 @@
+requests
+beautifulsoup4
+Pillow
+slack_sdk
+openai
+gspread
+google-auth
