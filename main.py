@@ -887,16 +887,25 @@ def make_daily_link_text(items):
     if not items:
         return f"📊 *andSTランキング画像レポート / {today()}*\nランキングデータがありません。"
 
-    first = items[0]
-    first_price = f'¥{first["price"]:,}' if first["price"] else "価格不明"
-
-    return "\n".join([
+    lines = [
         f"📊 *andSTランキング画像レポート / {today()}*",
         "",
-        f"1位：<{first['url']}|{first['name']}> {first_price}",
+        "🔗 *商品リンク TOP10*",
+    ]
+
+    for item in items[:10]:
+        price_text = f'¥{item["price"]:,}' if item["price"] else "価格不明"
+
+        lines.append(
+            f'{item["rank"]}位：<{item["url"]}|{item["name"]}> {price_text}'
+        )
+
+    lines.extend([
         "",
-        "詳細は画像レポートを確認してください。",
+        "詳細は画像レポートを確認してください。"
     ])
+
+    return "\n".join(lines)
 
 
 def make_period_link_text(report_type, period_title, summary):
