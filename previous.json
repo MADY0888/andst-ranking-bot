@@ -11,17 +11,7 @@
   },
   {
     "rank": 2,
-    "name": "2 LEPSIM シアーレースレイヤードT【カラー予約】 税込",
-    "price": 4990,
-    "url": "https://www.dot-st.com/lepsim/disp/item/887658/",
-    "image_url": "https://pdimg.dot-st.com/images/lepsim/goods/itemImg88/887658/item_887658_main_09_1780016463.jpg",
-    "category": "その他",
-    "brand": "カラー予約",
-    "label": "NEW / 予約"
-  },
-  {
-    "rank": 3,
-    "name": "3 studio CLIP 【新色追加】2WAYレースタンクトップ[プラスサイズあり] 税込",
+    "name": "2 studio CLIP 【新色追加】2WAYレースタンクトップ[プラスサイズあり] 税込",
     "price": 2990,
     "url": "https://www.dot-st.com/studioclip/disp/item/647904/",
     "image_url": "https://pdimg.dot-st.com/images/studioclip/goods/itemImg64/647904/item_647904_main_19_1780274882.jpg",
@@ -30,28 +20,8 @@
     "label": "NEW"
   },
   {
-    "rank": 4,
-    "name": "4 LEPSIM ロゴレースT 税込",
-    "price": 4990,
-    "url": "https://www.dot-st.com/lepsim/disp/item/816575/",
-    "image_url": "https://pdimg.dot-st.com/images/lepsim/goods/itemImg81/816575/item_816575_main_05_1780022727.jpg",
-    "category": "その他",
-    "brand": "andST",
-    "label": "NEW"
-  },
-  {
-    "rank": 5,
-    "name": "5 LEPSIM バックギャザーチュニック【カラー予約】 税込 再入荷",
-    "price": 4400,
-    "url": "https://www.dot-st.com/lepsim/disp/item/742571/",
-    "image_url": "https://pdimg.dot-st.com/images/lepsim/goods/itemImg74/742571/item_742571_main_05_1780445148.jpg",
-    "category": "その他",
-    "brand": "カラー予約",
-    "label": "予約"
-  },
-  {
-    "rank": 6,
-    "name": "6 GLOBAL WORK イージーケアリネンシャツ長袖/601200 税込",
+    "rank": 3,
+    "name": "3 GLOBAL WORK イージーケアリネンシャツ長袖/601200 税込",
     "price": 4490,
     "url": "https://www.dot-st.com/globalwork/disp/item/601200/",
     "image_url": "https://pdimg.dot-st.com/images/globalwork/goods/itemImg60/601200/item_601200_main_28_1772515397.jpg",
@@ -60,28 +30,38 @@
     "label": ""
   },
   {
+    "rank": 4,
+    "name": "4 LEPSIM シアーレースレイヤードT【カラー予約】 税込",
+    "price": 4990,
+    "url": "https://www.dot-st.com/lepsim/disp/item/887658/",
+    "image_url": "https://pdimg.dot-st.com/images/lepsim/goods/itemImg88/887658/item_887658_main_09_1780016463.jpg",
+    "category": "その他",
+    "brand": "カラー予約",
+    "label": "NEW / 予約"
+  },
+  {
+    "rank": 5,
+    "name": "5 LEPSIM 《レプクル》異素材フリルBIGT【カラー予約】 税込",
+    "price": 4400,
+    "url": "https://www.dot-st.com/lepsim/disp/item/242843/",
+    "image_url": "https://pdimg.dot-st.com/images/lepsim/goods/itemImg24/242843/item_242843_main_85_1777625015.jpg",
+    "category": "その他",
+    "brand": "カラー予約",
+    "label": "予約"
+  },
+  {
+    "rank": 6,
+    "name": "6 LEPSIM バックギャザーチュニック【カラー予約】 税込 再入荷",
+    "price": 4400,
+    "url": "https://www.dot-st.com/lepsim/disp/item/742571/",
+    "image_url": "https://pdimg.dot-st.com/images/lepsim/goods/itemImg74/742571/item_742571_main_05_1780445148.jpg",
+    "category": "その他",
+    "brand": "カラー予約",
+    "label": "予約"
+  },
+  {
     "rank": 7,
-    "name": "7 LOWRYS FARM 【予約受付中】 ヨウリュウシャーリングショートフレンチスリーブ 税込",
-    "price": 5500,
-    "url": "https://www.dot-st.com/lowrysfarm/disp/item/661674/",
-    "image_url": "https://pdimg.dot-st.com/images/lowrysfarm/goods/itemImg66/661674/item_661674_main_82_1774431020.jpg",
-    "category": "アクセサリー",
-    "brand": "予約受付中",
-    "label": "NEW / 予約"
-  },
-  {
-    "rank": 8,
-    "name": "8 LOWRYS FARM 【予約受付中】 シャーリングチュニックフレンチスリーブ 税込",
-    "price": 6050,
-    "url": "https://www.dot-st.com/lowrysfarm/disp/item/581468/",
-    "image_url": "https://pdimg.dot-st.com/images/lowrysfarm/goods/itemImg58/581468/item_581468_main_08_1776892278.jpg",
-    "category": "アクセサリー",
-    "brand": "予約受付中",
-    "label": "NEW / 予約"
-  },
-  {
-    "rank": 9,
-    "name": "9 niko and ... サラットドロストワイドTシャツ 税込 再入荷",
+    "name": "7 niko and ... サラットドロストワイドTシャツ 税込 再入荷",
     "price": 4000,
     "url": "https://www.dot-st.com/nikoand/disp/item/666894/",
     "image_url": "https://pdimg.dot-st.com/images/nikoand/goods/itemImg66/666894/item_666894_main_10_1775609771.jpg",
@@ -90,13 +70,33 @@
     "label": ""
   },
   {
+    "rank": 8,
+    "name": "8 LOWRYS FARM 【予約受付中】 ヨウリュウシャーリングショートフレンチスリーブ 税込",
+    "price": 5500,
+    "url": "https://www.dot-st.com/lowrysfarm/disp/item/661674/",
+    "image_url": "https://pdimg.dot-st.com/images/lowrysfarm/goods/itemImg66/661674/item_661674_main_82_1774431020.jpg",
+    "category": "アクセサリー",
+    "brand": "予約受付中",
+    "label": "NEW / 予約"
+  },
+  {
+    "rank": 9,
+    "name": "9 LOWRYS FARM 【予約受付中】 シャーリングチュニックフレンチスリーブ 税込",
+    "price": 6050,
+    "url": "https://www.dot-st.com/lowrysfarm/disp/item/581468/",
+    "image_url": "https://pdimg.dot-st.com/images/lowrysfarm/goods/itemImg58/581468/item_581468_main_08_1776892278.jpg",
+    "category": "アクセサリー",
+    "brand": "予約受付中",
+    "label": "NEW / 予約"
+  },
+  {
     "rank": 10,
-    "name": "10 LEPSIM 裾アソートレイヤードキャミ【カラー予約】 税込",
-    "price": 3300,
-    "url": "https://www.dot-st.com/lepsim/disp/item/639411/",
-    "image_url": "https://pdimg.dot-st.com/images/lepsim/goods/itemImg63/639411/item_639411_main_05_1775540708.jpg",
+    "name": "10 GLOBAL WORK リッチクリーンプリントT半袖/636780 税込 サイズ豊富",
+    "price": 3490,
+    "url": "https://www.dot-st.com/globalwork/disp/item/636780/",
+    "image_url": "https://pdimg.dot-st.com/images/globalwork/goods/itemImg63/636780/item_636780_main_05_1774951929.jpg",
     "category": "その他",
-    "brand": "カラー予約",
-    "label": "予約"
+    "brand": "andST",
+    "label": ""
   }
 ]
