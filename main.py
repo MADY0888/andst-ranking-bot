@@ -671,142 +671,211 @@ def draw_item_row(draw, base_img, item, x, y, w, font_rank, font_body, font_smal
     return y + row_h + 8
 
 
+def draw_age_compare_cell(draw, base_img, item, x, y, w, h, font_rank, font_body, font_small):
+    draw.rounded_rectangle(
+        (x, y, x + w, y + h),
+        radius=12,
+        fill="#ffffff",
+        outline="#dce8f5",
+        width=1,
+    )
+
+    if not item:
+        draw.text((x + 20, y + 40), "データなし", fill="#999999", font=font_body)
+        return
+
+    rank = item.get("rank", "")
+    brand = item.get("brand", "")
+    name = item.get("name", "")
+    price = item.get("price", 0)
+    label = item.get("label", "")
+
+    draw.rounded_rectangle(
+        (x + 12, y + 14, x + 58, y + 48),
+        radius=8,
+        fill="#4aa3df",
+    )
+    draw.text((x + 22, y + 19), str(rank), fill="#ffffff", font=font_rank)
+
+    thumb = download_image(item.get("image_url", ""))
+
+    if thumb:
+        thumb.thumbnail((70, 70))
+        base_img.paste(thumb, (x + 72, y + 14))
+    else:
+        draw.rectangle((x + 72, y + 14, x + 142, y + 84), fill="#eeeeee")
+
+    text_x = x + 155
+    text_w = w - 170
+
+    title = f"{brand} {name}".strip()
+    draw_text_wrap(
+        draw,
+        title,
+        (text_x, y + 14),
+        font_small,
+        "#111111",
+        text_w,
+        22,
+        max_lines=2,
+    )
+
+    price_text = f"¥{price:,}" if price else "価格不明"
+
+    if label:
+        price_text += f" / {label}"
+
+    draw_text_wrap(
+        draw,
+        price_text,
+        (text_x, y + 62),
+        font_small,
+        "#555555",
+        text_w,
+        20,
+        max_lines=1,
+    )
+
+
 def create_daily_report_image(grouped_items, ranking_analysis):
-    width = 1200
-    height = 2600
+    width = 1600
+    height = 1850
 
     img = Image.new("RGB", (width, height), "#ffffff")
     draw = ImageDraw.Draw(img)
 
-    font_title = get_font(40)
+    font_title = get_font(42)
     font_subtitle = get_font(28)
     font_body = get_font(22)
     font_small = get_font(17)
     font_rank = get_font(20)
 
     draw.rectangle((0, 0, width, 110), fill="#dceeff")
-    draw.text((40, 28), f"andST WOMENトップス 年代別ランキング / {today()}", fill="#111111", font=font_title)
-    draw.text((860, 42), "20代後半 / 30代前半 / 30代後半", fill="#333333", font=font_body)
+    draw.text(
+        (40, 28),
+        f"andST WOMENトップス 年代別ランキング / {today()}",
+        fill="#111111",
+        font=font_title,
+    )
+    draw.text(
+        (1120, 42),
+        "20代後半 / 30代前半 / 30代後半",
+        fill="#333333",
+        font=font_body,
+    )
 
-    summary_y = 140
-    draw.rounded_rectangle((40, summary_y, width - 40, summary_y + 150), radius=18, fill="#f2f8ff", outline="#dce8f5")
-    draw.text((65, summary_y + 22), "📈 本日の概要", fill="#111111", font=font_subtitle)
+    summary_y = 135
+    draw.rounded_rectangle(
+        (40, summary_y, width - 40, summary_y + 145),
+        radius=18,
+        fill="#f2f8ff",
+        outline="#dce8f5",
+    )
+    draw.text((65, summary_y + 22), "本日の概要", fill="#111111", font=font_subtitle)
 
     summary_text = make_summary_text(grouped_items, ranking_analysis)
-    text_y = summary_y + 70
+    text_y = summary_y + 68
 
     for line in summary_text.split("\n"):
         draw.text((70, text_y), "・" + line, fill="#111111", font=font_small)
         text_y += 28
 
-    section_y = 330
-    section_gap = 720
+    table_x = 40
+    table_y = 320
+    rank_col_w = 80
+    col_w = 480
+    header_h = 70
+    row_h = 130
 
-    for age_label, items in grouped_items.items():
-        analysis = ranking_analysis.get(age_label, {})
-        new_count = len(analysis.get("new_items", []))
-        rising_count = len(analysis.get("rising_items", []))
+    age_labels = [target["label"] for target in AGE_RANKING_TARGETS]
 
-        draw.rounded_rectangle(
-            (40, section_y, width - 40, section_y + 660),
-            radius=22,
-            fill="#fbfdff",
-            outline="#dce8f5",
+    table_w = rank_col_w + col_w * len(age_labels)
+    table_h = header_h + row_h * DAILY_TOP_N
+
+    draw.rounded_rectangle(
+        (table_x, table_y, table_x + table_w, table_y + table_h),
+        radius=22,
+        fill="#fbfdff",
+        outline="#dce8f5",
+        width=2,
+    )
+
+    draw.rectangle(
+        (table_x, table_y, table_x + table_w, table_y + header_h),
+        fill="#eaf5ff",
+    )
+
+    draw.text(
+        (table_x + 18, table_y + 22),
+        "順位",
+        fill="#111111",
+        font=font_body,
+    )
+
+    for col_index, age_label in enumerate(age_labels):
+        x = table_x + rank_col_w + col_index * col_w
+        draw.line(
+            (x, table_y, x, table_y + table_h),
+            fill="#dce8f5",
             width=2,
         )
-
-        draw.text((70, section_y + 24), f"🏆 {age_label} TOP10", fill="#111111", font=font_subtitle)
         draw.text(
-            (820, section_y + 30),
-            f"新規 {new_count}件 / 急上昇 {rising_count}件",
-            fill="#555555",
+            (x + 24, table_y + 20),
+            age_label,
+            fill="#111111",
+            font=font_subtitle,
+        )
+
+    for rank_index in range(DAILY_TOP_N):
+        y = table_y + header_h + rank_index * row_h
+
+        draw.line(
+            (table_x, y, table_x + table_w, y),
+            fill="#dce8f5",
+            width=1,
+        )
+
+        draw.text(
+            (table_x + 22, y + 48),
+            f"{rank_index + 1}位",
+            fill="#111111",
             font=font_body,
         )
 
-        left_x = 70
-        right_x = 615
-        row_y_left = section_y + 80
-        row_y_right = section_y + 80
+        for col_index, age_label in enumerate(age_labels):
+            items = grouped_items.get(age_label, [])
+            item = items[rank_index] if rank_index < len(items) else None
 
-        for index, item in enumerate(items[:10]):
-            if index < 5:
-                row_y_left = draw_item_row(
-                    draw,
-                    img,
-                    item,
-                    left_x,
-                    row_y_left,
-                    515,
-                    font_rank,
-                    font_body,
-                    font_small,
-                )
-            else:
-                row_y_right = draw_item_row(
-                    draw,
-                    img,
-                    item,
-                    right_x,
-                    row_y_right,
-                    515,
-                    font_rank,
-                    font_body,
-                    font_small,
-                )
+            cell_x = table_x + rank_col_w + col_index * col_w + 10
+            cell_y = y + 10
 
-        section_y += section_gap
+            draw_age_compare_cell(
+                draw,
+                img,
+                item,
+                cell_x,
+                cell_y,
+                col_w - 20,
+                row_h - 20,
+                font_rank,
+                font_body,
+                font_small,
+            )
 
-    draw.line((40, 2500, width - 40, 2500), fill="#dddddd", width=2)
-    draw.text((40, 2525), "ランキング元：andST / WOMEN > トップス / 年代別", fill="#555555", font=font_small)
-    draw.text((850, 2525), "毎日 9:15 自動投稿", fill="#555555", font=font_small)
-
-    img.save(REPORT_FILE)
-
-    return REPORT_FILE
-
-
-def create_period_report_image(report_type, period_title, summary):
-    width = 1200
-    height = 1700
-
-    img = Image.new("RGB", (width, height), "#ffffff")
-    draw = ImageDraw.Draw(img)
-
-    font_title = get_font(40)
-    font_subtitle = get_font(28)
-    font_body = get_font(21)
-    font_small = get_font(17)
-
-    report_label = "週次" if report_type == "weekly" else "月次"
-
-    draw.rectangle((0, 0, width, 110), fill="#dceeff")
-    draw.text((40, 28), f"andST WOMENトップス 年代別{report_label}レポート", fill="#111111", font=font_title)
-    draw.text((40, 140), period_title, fill="#111111", font=font_subtitle)
-
-    y = 210
-
-    for age_label, data in summary.items():
-        draw.rounded_rectangle((40, y, width - 40, y + 430), radius=20, fill="#fbfdff", outline="#dce8f5")
-        draw.text((70, y + 24), f"🏆 {age_label} 人気継続 TOP10", fill="#111111", font=font_subtitle)
-        draw.text((840, y + 30), f"登場商品数：{data['product_count']}商品", fill="#555555", font=font_body)
-
-        list_y = y + 80
-
-        if data["popularity"]:
-            for idx, item in enumerate(data["popularity"][:10], start=1):
-                text = (
-                    f"{idx}. {item['brand']} {item['name']} "
-                    f"/ 登場{item['appearances']}回 / 平均{item['avg_rank']:.1f}位 / 最高{item['best_rank']}位"
-                )
-                draw_text_wrap(draw, text, (70, list_y), font_small, "#111111", 1040, 25, max_lines=1)
-                list_y += 31
-        else:
-            draw.text((70, list_y), "集計対象データがありません。", fill="#555555", font=font_body)
-
-        y += 470
-
-    draw.line((40, 1620, width - 40, 1620), fill="#dddddd", width=2)
-    draw.text((40, 1645), "カテゴリ別・ブランド別・価格帯構成は削除済み", fill="#555555", font=font_small)
+    footer_y = table_y + table_h + 50
+    draw.line((40, footer_y, width - 40, footer_y), fill="#dddddd", width=2)
+    draw.text(
+        (40, footer_y + 25),
+        "ランキング元：andST / WOMEN > トップス / 年代別",
+        fill="#555555",
+        font=font_small,
+    )
+    draw.text(
+        (1240, footer_y + 25),
+        "毎日 9:15 自動投稿",
+        fill="#555555",
+        font=font_small,
+    )
 
     img.save(REPORT_FILE)
 
