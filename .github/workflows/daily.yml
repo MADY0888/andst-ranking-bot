@@ -49,12 +49,91 @@ jobs:
             echo "type=daily" >> $GITHUB_OUTPUT
           fi
 
+      - name: Prepare Slack targets
+        env:
+          EXISTING_SLACK_TARGETS_JSON: ${{ secrets.SLACK_TARGETS_JSON }}
+          PRIMARY_SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+          PRIMARY_SLACK_CHANNEL_ID: ${{ secrets.SLACK_CHANNEL_ID }}
+          SLACK_BOT_TOKEN_2: ${{ secrets.SLACK_BOT_TOKEN_2 }}
+          SLACK_CHANNEL_ID_2: ${{ secrets.SLACK_CHANNEL_ID_2 }}
+        run: |
+          python - <<'PY'
+          import json
+          import os
+
+          targets = []
+
+          existing_json = os.environ.get("EXISTING_SLACK_TARGETS_JSON", "").strip()
+          primary_token = os.environ.get("PRIMARY_SLACK_BOT_TOKEN", "").strip()
+          primary_channel = os.environ.get("PRIMARY_SLACK_CHANNEL_ID", "").strip()
+          token_2 = os.environ.get("SLACK_BOT_TOKEN_2", "").strip()
+          channel_2 = os.environ.get("SLACK_CHANNEL_ID_2", "").strip()
+
+          if existing_json:
+              try:
+                  existing_targets = json.loads(existing_json)
+              except json.JSONDecodeError as exc:
+                  raise RuntimeError("Existing SLACK_TARGETS_JSON is invalid JSON") from exc
+
+              if not isinstance(existing_targets, list):
+                  raise RuntimeError("Existing SLACK_TARGETS_JSON must be a JSON array")
+
+              targets.extend(existing_targets)
+          elif primary_token and primary_channel:
+              targets.append({
+                  "name": "existing_workspace",
+                  "bot_token": primary_token,
+                  "channel_ids": [
+                      channel_id.strip()
+                      for channel_id in primary_channel.split(",")
+                      if channel_id.strip()
+                  ],
+              })
+
+          if bool(token_2) != bool(channel_2):
+              raise RuntimeError(
+                  "SLACK_BOT_TOKEN_2 and SLACK_CHANNEL_ID_2 must both be configured"
+              )
+
+          if token_2 and channel_2:
+              channel_ids_2 = [
+                  channel_id.strip()
+                  for channel_id in channel_2.split(",")
+                  if channel_id.strip()
+              ]
+
+              already_registered = any(
+                  str(target.get("bot_token", "")).strip() == token_2
+                  and any(
+                      str(existing_channel).strip() in channel_ids_2
+                      for existing_channel in (
+                          target.get("channel_ids", [])
+                          if isinstance(target.get("channel_ids", []), list)
+                          else str(target.get("channel_ids", "")).split(",")
+                      )
+                  )
+                  for target in targets
+                  if isinstance(target, dict)
+              )
+
+              if not already_registered:
+                  targets.append({
+                      "name": "workspace_2",
+                      "bot_token": token_2,
+                      "channel_ids": channel_ids_2,
+                  })
+
+          if not targets:
+              raise RuntimeError("No Slack targets are configured")
+
+          with open(os.environ["GITHUB_ENV"], "a", encoding="utf-8") as env_file:
+              env_file.write("SLACK_TARGETS_JSON<<__SLACK_TARGETS__\n")
+              env_file.write(json.dumps(targets, ensure_ascii=False, separators=(",", ":")))
+              env_file.write("\n__SLACK_TARGETS__\n")
+          PY
+
       - name: Run script
         run: python main.py --report-type ${{ steps.report.outputs.type }}
-        env:
-          SLACK_TARGETS_JSON: ${{ secrets.SLACK_TARGETS_JSON }}
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-          SLACK_CHANNEL_ID: ${{ secrets.SLACK_CHANNEL_ID }}
 
       - name: Save latest data
         if: always()
